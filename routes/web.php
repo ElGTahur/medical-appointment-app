@@ -16,4 +16,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-Route::get('/admin', [AdminController::class, 'index']);
+Route::get('/admin', function () {
+    return view('admin.index'); // O como se llame tu vista
+})->name('admin.dashboard');

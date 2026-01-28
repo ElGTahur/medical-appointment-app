@@ -10,6 +10,7 @@ Desarrollar un sistema integral para la gestión de citas médicas que facilite 
 * **Gestor de Paquetes:** Composer & NPM
 
 Documentación ADA 2 - Medical Appointment App
+
 Este documento detalla la configuración inicial del proyecto Laravel con Jetstream, la integración de la base de datos MySQL y la creación de un panel administrativo personalizado utilizando Flowbite y Blade Components.
 
 1. Configuración Inicial del Proyecto

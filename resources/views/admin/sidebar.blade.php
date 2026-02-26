@@ -7,17 +7,13 @@
             'active' => request()->routeIs('admin.dashboard'),
         ],
         [
-            'header' => 'HOSPITAL',
+            'header' => 'Gestion',
         ],
         [
-            'name' => 'Citas Médicas',
-            'icon' => 'fa-solid fa-calendar-check',
-            'active' => false,
-            'submenu' => [
-                ['name' => 'Nueva Cita', 'href' => '#'],
-                ['name' => 'Historial', 'href' => '#'],
-                ['name' => 'Mis Doctores', 'href' => '#'],
-            ]
+            'name' => 'Roles y permisos',
+            'icon' => 'fa-solid fa-user-group',
+            'href' => route('admin.roles.index'),
+            'active' => request()->routeIs('admin.roles.*'),
         ],
     ];
 @endphp

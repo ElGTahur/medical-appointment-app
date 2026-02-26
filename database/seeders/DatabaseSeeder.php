@@ -1,5 +1,5 @@
 <?php
-
+//Inicia todo lo que respecta a los seeders
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -15,11 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        //Llamar a los seeders creados
+        $this->call(RoleSeeder::class);
 
+        //Crea el usuario por cada vez que se ejecuten las migraciones
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            //bcrypt Si tienes algo asi: "Gael" la base de datos la guardara como caracteres aleatorios
+            'password' => bcrypt('12345')
         ]);
     }
 }

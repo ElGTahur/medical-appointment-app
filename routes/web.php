@@ -34,5 +34,4 @@ Route::middleware(['auth:sanctum', 'verified'])
 
         // Gestion de roles
         Route::resource('roles', RoleController::class);
-
     });

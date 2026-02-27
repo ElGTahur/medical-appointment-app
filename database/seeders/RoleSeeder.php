@@ -33,10 +33,9 @@ class RoleSeeder extends Seeder
 
         //Crear los roles
 
-        foreach ($roles as $role){
-            Role::create([
-                'name' => $role
-            ]);
-        }
+// En RoleSeeder.php, dentro del foreach:
+foreach ($roles as $role) {
+    Role::firstOrCreate(['name' => $role]);
+}
     }
 }

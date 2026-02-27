@@ -1,7 +1,6 @@
 <?php
-//Inicia todo lo que respecta a los seeders
-namespace Database\Seeders;
 
+namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

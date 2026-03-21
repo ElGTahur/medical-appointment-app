@@ -58,5 +58,28 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+
+    <script>
+
+        forms = document.querySelectorALL('.delete-form');
+        forms.forEach(form => {
+        form.addEventListener('submit', fucntion(e)) {
+            e.preventDefault();
+            Swal.fire({
+                title: "¿Estas completamente seguro?",
+                text: "Una vez cambiado no podras recuperarlo mas",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmTextButton: "Si, seguro",
+                cancelButtonText: "Mejor nop"
+            }).then((result) => {
+                if (result)
+            }
+        )
+        }
+        }
+)
 </body>
 </html>

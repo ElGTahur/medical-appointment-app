@@ -7,8 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Protege la ruta '/dashboard' con un cerrojo de seguridad: solo permite el acceso a usuarios
-//  que hayan iniciado sesión, tengan una sesión activa de Jetstream y su correo verificado.
+// Ruta general de usuario (Dashboard de cliente/paciente)
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -19,19 +18,20 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Crea un área restringida ("aduana") donde todas las rutas internas requieren estar logueado,
-//  usarán el prefijo '/admin' en la URL y sus nombres internos empezarán con 'admin.'
-Route::middleware(['auth:sanctum', 'verified'])
+// --- SECCIÓN ADA 9: ÁREA RESTRINGIDA DE ADMINISTRACIÓN ---
+// Añadimos 'can:admin.home' o 'role:admin' para que un Paciente no pueda saltarse la barda
+//Quitar el can:admin.home para remover esa limitante de no saltarse los links solo copiando y pegando
+Route::middleware(['auth:sanctum', 'verified' /*'can:admin.home'*/]) 
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-// Define la ruta principal que carga la vista del panel de control (Dashboard)
-// y le asigna un nombre para referenciarla fácilmente.
+        // Esta es la página de aterrizaje del administrador
         Route::get('/', function () {
             return view('admin.index');
-        })->name('dashboard');
+        })->name('index'); // Se accede como route('admin.index')
 
-        // Gestion de roles
+        // CRUD de Roles: Al estar dentro del grupo, 
+        // hereda automáticamente la protección 'can:admin.home'
         Route::resource('roles', RoleController::class);
     });

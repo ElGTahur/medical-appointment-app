@@ -5,95 +5,68 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    //Indice o la parte principal, se vera el inicio y mostrara los roles
-
-
-public function index()
-{
-    $roles = Role::all();
-
-    return view('admin.roles.index', compact('roles'));
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index()
     {
-        return view('admin.roles.create');
+        $roles = Role::all();
+        return view('admin.roles.index', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-public function store(Request $request)
+// En tu RoleController.php
+public function edit(Role $role) // Cambia $id por Role $role
 {
-    $request->validate([
-        'name' => 'required|unique:roles,name'
-    ]);
-
-    Role::create([
-        'name' => $request->name,
-        'guard_name' => 'web'
-    ]);
-
-    return redirect()->route('admin.roles.index');
+    $permissions = Permission::all();
+    return view('admin.roles.edit', compact('role', 'permissions'));
 }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-public function edit($id)
+public function update(Request $request, Role $role)
 {
-    $role = Role::findOrFail($id);
-    return view('admin.roles.edit', compact('role'));
-}
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-
-public function update(Request $request, $id)
-{
-    $role = Role::findOrFail($id);
-
     $request->validate([
         'name' => 'required|unique:roles,name,' . $role->id
     ]);
 
-    $role->update(['name' => $request->name]);
+    // Blindaje de Nombre (Video 34)
+    if ($role->id <= 5) {
+        $role->update($request->only('permissions'));
+    } else {
+        $role->update($request->all());
+    }
 
-    return redirect()->route('admin.roles.index');
+    // ARREGLO AQUÍ: Convertimos los IDs que vienen del form en objetos de Permiso
+    // Esto evita el error "There is no permission named '1'"
+    if ($request->has('permissions')) {
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+        $role->syncPermissions($permissions);
+    } else {
+        // Si no mandó nada, le quitamos todos los permisos (Video 33)
+        $role->syncPermissions([]);
+    }
+
+    return redirect()->route('admin.roles.index')
+        ->with('swal', [
+            'icon' => 'success',
+            'title' => '¡Éxito!',
+            'text' => 'Rol actualizado correctamente.'
+        ]);
 }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-public function destroy($id)
-{
-    $role = \Spatie\Permission\Models\Role::findOrFail($id);
+    public function destroy(Role $role)
+    {
+        // Blindaje ADA 9: Protección de roles core
+        $protectedRoles = ['Admin', 'Doctores', 'Paciente', 'Recepcionista'];
 
-    // Quitar permisos asociados
-    $role->permissions()->detach();
+        if (in_array($role->name, $protectedRoles) || $role->id <= 5) {
+            return redirect()->route('admin.roles.index')->with('swal', [
+                'icon' => 'error',
+                'title' => 'Acción Bloqueada',
+                'text' => 'Este rol es vital para la Medical Appointment App.'
+            ]);
+        }
 
-    // Quitar usuarios asociados
-    $role->users()->detach();
-
-    $role->delete();
-
-    return redirect()->route('admin.roles.index');
-}
+        $role->delete();
+        return redirect()->route('admin.roles.index')->with('swal', ['icon' => 'success', 'title' => 'Eliminado']);
+    }
 }

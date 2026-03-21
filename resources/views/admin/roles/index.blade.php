@@ -41,12 +41,12 @@
 
 <a href="{{ route('admin.roles.edit', $role->id) }}"
    class="text-blue-600 hover:text-blue-900 mr-3">
-    ✏️
+    ⚒️
 </a>
 
                 <button onclick="confirmDelete({{ $role->id }})"
                         class="text-red-600 hover:text-red-900">
-                    🗑️
+                    🚮
                 </button>
 
 <form id="delete-form-{{ $role->id }}"
@@ -86,5 +86,15 @@
             })
         }
     </script>
-
+    {{-- Script para capturar alertas de sesión --}}
+    @if (session('swal'))
+        <script>
+            Swal.fire({
+                icon: '{{ session('swal.icon') }}',
+                title: '{{ session('swal.title') }}',
+                text: '{{ session('swal.text') }}',
+                confirmButtonColor: '#4f46e5',
+            });
+        </script>
+    @endif
 </x-app-layout>
